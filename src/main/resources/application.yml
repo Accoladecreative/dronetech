@@ -15,3 +15,7 @@ spring:
     console:
       enabled: true
       path: /h2-console
+
+dronetech:
+  audit:
+    fixed-rate-ms: 60000

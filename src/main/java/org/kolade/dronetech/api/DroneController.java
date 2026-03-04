@@ -1,33 +1,42 @@
 package org.kolade.dronetech.api;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import java.util.List;
+import org.kolade.dronetech.api.dto.BatteryAuditResponse;
 import org.kolade.dronetech.api.dto.BatteryResponse;
 import org.kolade.dronetech.api.dto.DroneRequest;
 import org.kolade.dronetech.api.dto.DroneResponse;
 import org.kolade.dronetech.api.dto.LoadDroneRequest;
 import org.kolade.dronetech.api.dto.LoadedMedicationItemResponse;
+import org.kolade.dronetech.service.BatteryAuditService;
 import org.kolade.dronetech.service.DroneService;
 import org.kolade.dronetech.service.LoadingService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+@Validated
 @RestController
 @RequestMapping("/api/drones")
 public class DroneController {
 
     private final DroneService droneService;
     private final LoadingService loadingService;
+    private final BatteryAuditService batteryAuditService;
 
-    public DroneController(DroneService droneService, LoadingService loadingService) {
+    public DroneController(DroneService droneService, LoadingService loadingService, BatteryAuditService batteryAuditService) {
         this.droneService = droneService;
         this.loadingService = loadingService;
+        this.batteryAuditService = batteryAuditService;
     }
 
     @PostMapping
@@ -53,5 +62,14 @@ public class DroneController {
     @GetMapping("/{serialNumber}/battery")
     public BatteryResponse getBatteryLevel(@PathVariable String serialNumber) {
         return droneService.getBatteryLevel(serialNumber);
+    }
+
+    @GetMapping("/{serialNumber}/battery/audit")
+    public List<BatteryAuditResponse> getBatteryAudit(
+        @PathVariable String serialNumber,
+        @RequestParam(defaultValue = "50") @Min(1) @Max(200) int limit
+    ) {
+        droneService.getDroneBySerialNumber(serialNumber);
+        return batteryAuditService.getAuditLogs(serialNumber, limit);
     }
 }

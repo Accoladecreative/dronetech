@@ -78,3 +78,9 @@ curl http://localhost:8080/api/drones/DRN-001/battery
 - Drone total loaded weight cannot exceed `weightLimitGrams`
 - Drone battery must be at least 25% for loading
 - Drone must be in `IDLE` or `LOADING` state to accept new load
+
+
+## Battery Audit Job
+
+- A scheduled job runs every 1 minute and logs battery snapshots for all drones.
+- Interval is configurable via `dronetech.audit.fixed-rate-ms` in `application.yml`.
