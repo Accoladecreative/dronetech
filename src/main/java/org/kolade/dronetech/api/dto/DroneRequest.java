@@ -13,6 +13,6 @@ public record DroneRequest(
     @NotNull DroneModel model,
     @NotNull @Max(500) Integer weightLimitGrams,
     @NotNull @Min(0) @Max(100) Integer batteryCapacityPercent,
-    @NotNull DroneState state
+    DroneState state
 ) {
 }

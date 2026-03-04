@@ -68,4 +68,8 @@ public class Drone {
     public DroneState getState() {
         return state;
     }
+
+    public void setState(DroneState state) {
+        this.state = state;
+    }
 }
